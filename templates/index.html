@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Webcam Live Feed</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            text-align: center;
+        }
+
+        h1 {
+            margin-top: 0;
+            color: #333;
+        }
+
+        #video {
+            max-width: 100%;
+            height: auto;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Webcam Live Feed</h1>
+        <!-- The live video feed will be streamed here -->
+        <img id="video" src="{{ url_for('video_feed') }}" alt="Webcam Feed">
+    </div>
+
+    <script>
+        // JavaScript to handle page visibility and refresh video feed when the tab is active
+        var videoElement = document.getElementById('video');
+
+        // Function to reload the video feed
+        function reloadVideoFeed() {
+            // Append a random query string to prevent caching issues
+            videoElement.src = "{{ url_for('video_feed') }}" + "?rand=" + new Date().getTime();
+        }
+
+        // Initially load the video feed
+        reloadVideoFeed();
+
+        // Handle page visibility change
+        document.addEventListener("visibilitychange", function() {
+            if (document.visibilityState === "visible") {
+                // Tab became active, reload the video feed
+                reloadVideoFeed();
+            }
+        });
+
+        // Optional: Detect when the window/tab is blurred and try to stop the feed
+        window.addEventListener('blur', function() {
+            // Optionally, you can stop the feed or perform other actions when the tab is blurred.
+            // For now, it just reloads the feed when the tab becomes active again.
+        });
+    </script>
+</body>
+</html>
